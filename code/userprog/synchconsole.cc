@@ -23,6 +23,8 @@ SynchConsoleInput::SynchConsoleInput(char *inputFile)
     lock = new Lock("console in");
     waitFor = new Semaphore("console in", 0);
 }
+
+// read the whole string
 int SynchConsoleInput::ReadStr(char* buffer,int length)
 {
     for(int i = 0; i < (length-1); i++)
@@ -91,6 +93,8 @@ SynchConsoleOutput::SynchConsoleOutput(char *outputFile)
     lock = new Lock("console out");
     waitFor = new Semaphore("console out", 0);
 }
+
+// to print the whole string
 void SynchConsoleOutput::PrintStr(char* buffer,int length)
 {
      for(int i= 0;i < length;i++)

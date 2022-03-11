@@ -137,14 +137,15 @@ int SysRandomNum() {
   return rand();
 }
 
-void SysReadString(int buffer,int length)
+void SysReadString(int buffer, int length)
 {
-	char *buf = NULL;
-	int StrRead_FullLen = 0;
+	char *buff = NULL;
+  // de gan gia tri tra ve cua kernel->synchConsoleIn->ReadStr(buff,length);, lay vi tri cua dau \0
+	int userStringMaxLength = 0;
 	if (length > 0) 
 	{
-		buf = new char[length];
-		if (buf == NULL) 
+		buff = new char[length];
+		if (buff == NULL) 
 		{
 			char msg[] = "Not enough memory in system.\n\0";
 			kernel->synchConsoleOut->PrintStr(msg,strlen(msg));
@@ -153,26 +154,26 @@ void SysReadString(int buffer,int length)
 		{
 			char msg[] = "Enter string: \0";
 			kernel->synchConsoleOut->PrintStr(msg);
-			StrRead_FullLen = kernel->synchConsoleIn->ReadStr(buf,length); 
+			userStringMaxLength = kernel->synchConsoleIn->ReadStr(buff,length); 
 			//Return the pos of '\0' suppose to be
-			buf[StrRead_FullLen] = '\0';
+			buff[userStringMaxLength] = '\0';
 		}
 	}
 	else
 	{
-		memset(buf, 0, length);
+		memset(buff, 0, length);
 	}
   //cerr << "Doc duoc: ";
-	if (buf != NULL) 
+	if (buff != NULL) 
 	{
-		for (int i = 0; i <= StrRead_FullLen ; i++) 
+		for (int i = 0; i <= userStringMaxLength ; i++) 
 		{
-      //cerr << buf[i];
-			//Kernel buf -> user buffer
-			kernel->machine->WriteMem(buffer+i,1,(int)buf[i]); 
-      // Lay du lieu cua Kernel(buf) Write vao du lieu cua user (buffer).Thi ben cai user (file string io no se co du lieu)
+      //cerr << buff[i];
+			//Kernel buff -> user buffer
+			kernel->machine->WriteMem(buffer+i,1,(int)buff[i]); 
+      // Lay du lieu cua Kernel(buff) Write vao du lieu cua user (buffer).Thi ben cai user (file string io no se co du lieu)
 		}
-        delete[] buf;
+        delete[] buff;
   }
   //cerr << "\n";	    
   return;
@@ -180,7 +181,7 @@ void SysReadString(int buffer,int length)
 
 void SysPrintString(int buffer)
 {
-  int ch=0;
+  int ch = 0;
 	//int ch[128]
 	int MAX_STRING_LENGTH = 256;
 	for(int i=0; i < MAX_STRING_LENGTH; i++)
