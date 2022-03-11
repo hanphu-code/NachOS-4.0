@@ -125,7 +125,17 @@ void SysPrintNum(int number)
 
 char SysReadChar() 
 { 
-  return kernel->synchConsoleIn->GetChar(); 
+  char c = '\0', temp = '\0';
+  do
+  {
+    temp = kernel->synchConsoleIn->GetChar();
+    if (c == '\0')
+    {
+      c = temp;
+    }
+  } while (temp != '\0' && temp != '\n' && temp != EOF);
+  return c;
+  //return kernel->synchConsoleIn->GetChar(); 
 }
 
 void SysPrintChar(char character) {
