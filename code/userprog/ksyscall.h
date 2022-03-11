@@ -169,7 +169,8 @@ void SysReadString(int buffer,int length)
 		{
       //cerr << buf[i];
 			//Kernel buf -> user buffer
-			kernel->machine->WriteMem(buffer+i,1,(int)buf[i]); // Cai nay lay du lieu cua Kernel(buf) Write vao du lieu cua user (buffer).Thi ben cai user (file string io no se co du lien)
+			kernel->machine->WriteMem(buffer+i,1,(int)buf[i]); 
+      // Lay du lieu cua Kernel(buf) Write vao du lieu cua user (buffer).Thi ben cai user (file string io no se co du lieu)
 		}
         delete[] buf;
   }
@@ -185,9 +186,10 @@ void SysPrintString(int buffer)
 	for(int i=0; i < MAX_STRING_LENGTH; i++)
 	{
 		//user buffer -> kernel p
-		kernel->machine->ReadMem(buffer+i,1,&ch); // Lay du lieu tu user tai dia chi buffer+i bo vao kernel ch
-		//kernel->machine->ReadMem(buffer+i,1,ch+i);
-		//Do lấy string để in ra thôi nên ko cần char array
+		kernel->machine->ReadMem(buffer+i,1,&ch); 
+    // Lay du lieu tu user tai dia chi buffer+i bo vao kernel ch
+		// kernel->machine->ReadMem(buffer+i,1,ch+i);
+		// Vi lay string de print ra thoi nen khong can char array
 		kernel->synchConsoleOut->PutChar(char(ch));
 		if(char(ch) == '\0' || char(ch) == EOF)
 		{
@@ -195,26 +197,5 @@ void SysPrintString(int buffer)
 		}
 	}
 }
-
-// char* SysReadString(char* buffer, int length) 
-// {
-//     buffer = new char[length + 1];
-//     for (int i = 0; i < length; i++) {
-//       buffer[i] = SysReadChar();
-//     }
-//     buffer[length] = '\0';
-//     return buffer;
-// }
-
-// void SysPrintString (char* buffer)
-// {
-//   int i = 0;
-//   while(buffer[i] != '\0')
-//   {
-//     kernel->synchConsoleOut->PutChar(buffer[i]);
-//     i++;
-//   }
-// }
-
 
 #endif /* ! __USERPROG_KSYSCALL_H__ */
