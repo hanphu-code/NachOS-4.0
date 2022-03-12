@@ -42,10 +42,89 @@ int SysSub(int op1, int op2)
   return op1 - op2;
 }
 
+// // ReadNum function
+// int SysReadNum() 
+// {
+//   // kernel->synchConsoleIn->GetChar();
+//   int MAX_BUFFER = 255, i = 0;
+//   char* buffer = new char [MAX_BUFFER + 1];
+//   do
+//   {
+//     char n = kernel->synchConsoleIn->GetChar();
+//     if(n == '\n')
+//       break;
+//     buffer[i] = n;
+//     i++;
+//   } while (true);
+//   long long tmp = 0, ans = 0;
+//   if(buffer[0] == '-')
+//   {
+//     for(int j = i - 1; j >= 1; j--)
+//     {
+//       if(buffer[j] - '0' < 0 || buffer[j] - '0' > 9)
+//         return 0;
+//       ans += (buffer[j] - 48) * pow(10, tmp);
+//       tmp++;
+//     }
+//     ans = 0 - ans;
+//   }
+//   else
+//   {
+//     for(int j = i - 1; j >= 0; j--)
+//     {
+//       if(buffer[j] - '0' < 0 || buffer[j] - '0' > 9)
+//         return 0;
+//       ans += (buffer[j] - 48) * pow(10, tmp);
+//       tmp++;
+//     }
+//   } 
+//   if(ans > INT_MAX || ans < INT_MIN)
+//     ans = 0;
+//   return ans;
+// }
+
+// void SysPrintNum(int number) 
+// {
+//   if (number == 0) return kernel->synchConsoleOut->PutChar('0');
+
+//   if (number == INT_MIN) 
+//   {
+//       kernel->synchConsoleOut->PutChar('-');
+//       for (int i = 0; i < 10; ++i)
+//           kernel->synchConsoleOut->PutChar("2147483648"[i]);
+//       return;
+//   }
+
+//   if (number == INT_MAX) 
+//   {
+//     for (int i = 0; i < 10; ++i)
+//           kernel->synchConsoleOut->PutChar("2147483647"[i]);
+//       return;
+//   }
+
+//   if (number < INT_MIN && number > INT_MAX) {
+//     return kernel->synchConsoleOut->PutChar('0');
+//   } 
+
+//   if (number < 0) 
+//   {
+//       kernel->synchConsoleOut->PutChar('-');
+//       number = -number;
+//   }
+//   int n = 0;
+//   while (number)
+//   {
+//       numberBuffer[n] = number % 10;
+//       number /= 10;
+//       n++;
+//   }
+//   for (int i = n - 1; i >= 0; --i)
+//       kernel->synchConsoleOut->PutChar(numberBuffer[i] + '0');
+// }
+
 // ReadNum function
 int SysReadNum() 
 {
-  // kernel->synchConsoleIn->GetChar();
   int MAX_BUFFER = 255, i = 0;
   char* buffer = new char [MAX_BUFFER + 1];
 
@@ -56,18 +135,18 @@ int SysReadNum()
       break;
     buffer[i] = n;
     i++;
-  } while (true);
+  } while (true); //nhan ky tu roi luu vao trong buffer
   long long tmp = 0, ans = 0;
   if(buffer[0] == '-')
   {
-    for(int j = i - 1; j >= 1; j--)
+    for(int j = i - 1; j >= 1; j--) //chuyen buffer thanh 1 so int: kiem tra co phai ky tu so nguyen khong, roi sau do - '0' de bien thanh so nguyen
     {
       if(buffer[j] - '0' < 0 || buffer[j] - '0' > 9)
         return 0;
       ans += (buffer[j] - 48) * pow(10, tmp);
       tmp++;
     }
-    ans = 0 - ans;
+    ans = 0 - ans; //chuyen so am thanh duong giup de xu ly
   }
   else
   {
@@ -79,7 +158,7 @@ int SysReadNum()
       tmp++;
     }
   } 
-  if(ans > INT_MAX || ans < INT_MIN)
+  if(ans > INT_MAX || ans < INT_MIN) //khong phai int thi return 0
     ans = 0;
   return ans;
 }
@@ -88,7 +167,7 @@ void SysPrintNum(int number)
 {
   if (number == 0) return kernel->synchConsoleOut->PutChar('0');
 
-  if (number == INT_MIN) 
+  if (number == INT_MIN) //vi int_max chi bang 2147483647 nen phai xu ly rieng int_min 
   {
       kernel->synchConsoleOut->PutChar('-');
       for (int i = 0; i < 10; ++i)
@@ -96,14 +175,7 @@ void SysPrintNum(int number)
       return;
   }
 
-  if (number == INT_MAX) 
-  {
-    for (int i = 0; i < 10; ++i)
-          kernel->synchConsoleOut->PutChar("2147483647"[i]);
-      return;
-  }
-
-  if (number < INT_MIN && number > INT_MAX) {
+  if (number < INT_MIN || number > INT_MAX) {
     return kernel->synchConsoleOut->PutChar('0');
   } 
 
@@ -113,7 +185,7 @@ void SysPrintNum(int number)
       number = -number;
   }
   int n = 0;
-  while (number)
+  while (number) //dem so chu so
   {
       numberBuffer[n] = number % 10;
       number /= 10;
@@ -122,6 +194,7 @@ void SysPrintNum(int number)
   for (int i = n - 1; i >= 0; --i)
       kernel->synchConsoleOut->PutChar(numberBuffer[i] + '0');
 }
+
 
 char SysReadChar() 
 { 
@@ -160,9 +233,10 @@ void SysReadString(int buffer, int length)
 		buff = new char[length];
 		if (buff == NULL) 
 		{
-			char msg[] = "Not enough memory in system.\n\0";
-			kernel->synchConsoleOut->PrintStr(msg,strlen(msg));
+			char msg[] = "Not enough space to store or user entered a null string.\n\0";
+			kernel->synchConsoleOut->PrintStr(msg,strlen(msg)); // print out the msg
 		}
+    // buff not null
 		else
 		{
 			char msg[] = "Enter string: \0";
@@ -184,7 +258,7 @@ void SysReadString(int buffer, int length)
       //cerr << buff[i];
 			//Kernel buff -> user buffer
 			kernel->machine->WriteMem(buffer+i,1,(int)buff[i]); 
-      // Lay du lieu cua Kernel(buff) Write vao du lieu cua user (buffer).Thi ben cai user (file string io no se co du lieu)
+      // Lay du lieu cua Kernel(buff) Write vao du lieu cua user(buffer). Thi ben cai user (file string io no se co du lieu)
 		}
         delete[] buff;
   }

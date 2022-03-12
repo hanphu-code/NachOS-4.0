@@ -24,7 +24,7 @@ SynchConsoleInput::SynchConsoleInput(char *inputFile)
     waitFor = new Semaphore("console in", 0);
 }
 
-// read the whole string
+// read the whole string and return the end pos of the str
 int SynchConsoleInput::ReadStr(char* buffer,int length)
 {
     for(int i = 0; i < (length-1); i++)
