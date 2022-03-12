@@ -153,6 +153,7 @@ void ExceptionHandler(ExceptionType which)
             cerr << "Error " << which << " occurs\n";
             SysHalt();
             ASSERTNOTREACHED();
+			break;
 			
     	case SyscallException:
       		switch(type) {
@@ -161,7 +162,7 @@ void ExceptionHandler(ExceptionType which)
 					SysHalt();
 					ASSERTNOTREACHED();
 					break;
-				  }
+				}
 
       			case SC_Add: {
 					DEBUG(dbgSys, "Add " << kernel->machine->ReadRegister(4) << " + " << kernel->machine->ReadRegister(5) << "\n");
@@ -177,8 +178,7 @@ void ExceptionHandler(ExceptionType which)
 					return;
 					ASSERTNOTREACHED();
 					break;
-				  }
-
+				}
 
 				case SC_Sub: {
 					DEBUG(dbgSys, "Sub " << kernel->machine->ReadRegister(4) << " - " << kernel->machine->ReadRegister(5) << "\n");

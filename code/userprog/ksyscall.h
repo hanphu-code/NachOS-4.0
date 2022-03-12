@@ -135,15 +135,18 @@ char SysReadChar()
     }
   } while (temp != '\0' && temp != '\n' && temp != EOF);
   return c;
-  //return kernel->synchConsoleIn->GetChar(); 
+  // chi can return kernel->synchConsoleIn->GetChar(); la se chay duoc roi
+  // Nhung de fix loi khi nhap >= 3 ki tu thi terminal se tu dong chay 1 lenh voi cau lenh la 2 ki tu con lai ma user nhap du
 }
 
 void SysPrintChar(char character) {
+  // vao kernel->synchConsoleOut va goi ham PutChar() de xuat 1 ki tu ra man hinh console
   kernel->synchConsoleOut->PutChar(character);
   return;
 }
 
 int SysRandomNum() {
+  // dung ham random cua thu vien #include <stdlib.h> de tao ra mot so nguyen ngau nhien
   return rand();
 }
 
